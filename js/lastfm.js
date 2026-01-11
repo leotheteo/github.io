@@ -1,6 +1,5 @@
-const LASTFM_API_KEY = '8f7fef7516ec3b323e51d5e2075a07e5';
-const LASTFM_USERNAME = 'xx_bloodcor3_xx';
-const TRACK_LIMIT = 3;
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
+const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
 const REFRESH_INTERVAL = 30000;
 
 function formatDuration(seconds) {
@@ -50,8 +49,12 @@ async function fetchRecentTracks() {
   if (!trackList) return;
 
   try {
-    const url = `https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=${LASTFM_USERNAME}&api_key=${LASTFM_API_KEY}&format=json&limit=${TRACK_LIMIT}`;
-    const response = await fetch(url);
+    const response = await fetch(`${SUPABASE_URL}/functions/v1/lastfm`, {
+      headers: {
+        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+        'Content-Type': 'application/json',
+      },
+    });
 
     if (!response.ok) throw new Error('failed to fetch');
 
